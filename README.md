@@ -1,22 +1,13 @@
 # Riot Take-Home Technical Challenge
 
-## Overview
+This project implements an HTTP API with 4 endpoints for encryption, decryption, signing, and signature verification. The app is built using **Node.js**, **TypeScript**, and **Fastify**.
 
-This challenge requires you to build an HTTP API with 4 endpoints that handle JSON payloads for encryption, decryption, signing, and verification operations.
+## ✨ Endpoints
 
-## Requirements
+### 1. `/encrypt` (POST)
+Encrypts all top-level properties of a JSON payload using **Base64**.
 
-### 1. Encryption Endpoint (`/encrypt`)
-
-- **Method**: POST
-- **Input**: Any JSON payload
-- **Output**: JSON payload with all properties at depth 1 encrypted
-- **Encryption Algorithm**: Base64 (for simplicity)
-
-**Example**:
-
-Input:
-
+**Example Input**
 ```json
 {
   "name": "John Doe",
@@ -28,189 +19,115 @@ Input:
 }
 ```
 
-Output:
-
+**Example Output**
 ```json
 {
   "name": "Sm9obiBEb2U=",
   "age": "MzA=",
-  "contact": "eyJlbWFpbCI6ImpvaG5AZXhhbXBsZS5j..."
+  "contact": "eyJlbWFpbCI6ImpvaG5AZXhhbXBsZS5jb20iLCJwaG9uZSI6IjEyMy00NTYtNzg5MCJ9"
 }
 ```
 
-### 2. Decryption Endpoint (`/decrypt`)
+---
 
-- **Method**: POST
-- **Input**: Any JSON payload
-- **Output**: Original JSON payload with decrypted values. If some properties contain values which were not encrypted, they must remain unchanged.
-- **Decryption Algorithm**: Base64 (for simplicity)
+### 2. `/decrypt` (POST)
+Decrypts Base64 values in a JSON payload. Unencrypted properties remain unchanged.
 
-**Examples**:
+---
 
-Using the output from the `/encrypt` example as input should return the original payload:
+### 3. `/sign` (POST)
+Adds an HMAC-based `signature` to the payload. Signature is **order-independent**.
 
-Input:
+---
 
-```json
-{
-  "name": "Sm9obiBEb2U=",
-  "age": "MzA=",
-  "contact": "eyJlbWFpbCI6ImpvaG5AZXhhbXBsZS5j..."
-}
+### 4. `/verify` (POST)
+Validates a payload's `signature`.  
+Returns:
+- **204 No Content** if valid
+- **400 Bad Request** if invalid
+
+---
+
+## 🛠️ Tech Stack
+
+- Node.js
+- TypeScript
+- Fastify
+- HMAC (crypto)
+- Base64 encoding
+- pnpm (for package management)
+
+---
+
+## 🚀 Getting Started
+
+### 1. Clone the repository
+
+```bash
+git clone https://github.com/UnArtisant/take-home.git
+cd take-home
 ```
 
-Output:
+### 2. Install dependencies
 
-```json
-{
-  "name": "John Doe",
-  "age": 30,
-  "contact": {
-    "email": "john@example.com",
-    "phone": "123-456-7890"
-  }
-}
+```bash
+pnpm install
 ```
 
-Unencrypted properties must remain unchanged:
+### 3. Build the project
 
-Input:
-
-```json
-{
-  "name": "Sm9obiBEb2U=",
-  "age": "MzA=",
-  "contact": "eyJlbWFpbCI6ImpvaG5AZXhhbXBsZS5j...",
-  "birth_date": "1998-11-19"
-}
+```bash
+pnpm build
 ```
 
-Output:
+### 4. Start the server
 
-```json
-{
-  "name": "John Doe",
-  "age": 30,
-  "contact": {
-    "email": "john@example.com",
-    "phone": "123-456-7890"
-  },
-  "birth_date": "1998-11-19"
-}
+```bash
+pnpm start
 ```
 
-### 3. Signing Endpoint (`/sign`)
+Server will run on `http://localhost:3000` by default.
 
-- **Method**: POST
-- **Input**: Any JSON payload
-- **Output**: JSON payload with a unique "signature" property
-- **Signature Algorithm**: HMAC
-- **Important Note**: The signature must be computed based on the value of the JSON payload, not its string representation. This means the order of properties should not affect the signature.
+---
 
-**Examples**:
+## 👨‍💻 Development Mode
 
-Basic example for an object with two properties:
-
-Input:
-
-```json
-{
-  "message": "Hello World",
-  "timestamp": 1616161616
-}
+```bash
+pnpm dev
 ```
 
-Output:
+---
 
-```json
-{
-  "signature": "a1b2c3d4e5f6g7h8i9j0..."
-}
-```
+## ✅ Available Scripts
 
-The order of properties must not change the signature, which means this example will generate the same signature:
+| Script | Description |
+|--------|-------------|
+| `pnpm start` | Start the server (built output) |
+| `pnpm dev` | Start with watch mode (auto-reload) |
+| `pnpm build` | Compile TypeScript |
+| `pnpm lint` | Run ESLint |
+| `pnpm lint:fix` | Auto-fix lint issues |
+| `pnpm format` | Check formatting with Prettier |
+| `pnpm format:fix` | Auto-format code |
+| `pnpm lint-and-format` | Run lint and format checks |
+| `pnpm test` | Run unit tests with `tap` |
 
-Input:
+---
 
-```json
-{
-  "timestamp": 1616161616,
-  "message": "Hello World"
-}
-```
+## 📌 Notes
 
-Output:
+- All cryptographic functions are **abstracted**, allowing easy swap of Base64 or HMAC with more secure algorithms if needed.
+- Ensure **/encrypt ➜ /decrypt** restores the original payload.
+- Ensure **/sign ➜ /verify** works regardless of JSON property order.
 
-```json
-{
-  "signature": "a1b2c3d4e5f6g7h8i9j0..."
-}
-```
+---
 
-### 4. Verification Endpoint (`/verify`)
+## 🧪 Code Coverage
 
-- **Method**: POST
-- **Input**: JSON payload with "signature" and "data" properties
-- **Output**:
-  - HTTP 204 (No Content) if signature is valid
-  - HTTP 400 (Bad Request) if signature is invalid
+> Generated from unit tests
 
-**Examples**:
+| File                          | % Stmts | % Branch | % Funcs | % Lines | Uncovered Line #s |
+|------------------------------|---------|----------|---------|---------|-------------------|
+| All files                    | 99.28   | 97.67    | 100     | 99.28   |                   |
 
-Basic example of an object with two properties:
-
-Input:
-
-```json
-{
-  "signature": "a1b2c3d4e5f6g7h8i9j0...",
-  "data": {
-    "message": "Hello World",
-    "timestamp": 1616161616
-  }
-}
-```
-
-Output: 204 HTTP response
-
-The same input object with the order of properties changed must produce the same signature:
-
-Input:
-
-```json
-{
-  "signature": "a1b2c3d4e5f6g7h8i9j0...",
-  "data": {
-    "timestamp": 1616161616,
-    "message": "Hello World"
-  }
-}
-```
-
-Output: 204 HTTP response
-
-Example when using a tampered signature or payload:
-
-Input:
-
-```json
-{
-  "signature": "a1b2c3d4e5f6g7h8i9j0...",
-  "data": {
-    "timestamp": 1616161616,
-    "message": "Goodbye World"
-  }
-}
-```
-
-Output: 400 HTTP response
-
-## Design Considerations
-
-1. **Abstraction**: The encryption algorithm (Base64) in the `/encrypt` and `/decrypt` endpoints should be easily replaceable with another algorithm without significant changes to the codebase. Design your solution with appropriate abstractions. The same principle applies to the signature algorithm used in the `/sign` and `/verify` endpoints.
-
-2. **Consistency**: Ensure that `/encrypt` followed by `/decrypt` returns the original payload. Ensure that a payload signed with `/sign` can be successfully verified with `/verify`.
-
-## Submission
-
-Please submit your completed project by sending your GitHub repository link to louis@tryriot.com.
+🔍 99.28% of the code is covered.

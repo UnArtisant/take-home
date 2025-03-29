@@ -1,0 +1,9 @@
+{
+  "extends": "fastify-tsconfig",
+  "compilerOptions": {
+    "moduleResolution": "node16",
+    "outDir": "dist",
+    "sourceMap": true
+  },
+  "include": ["**/*.ts"]
+}

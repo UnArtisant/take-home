@@ -1,0 +1,53 @@
+{
+  "name": "take-home",
+  "version": "1.0.0",
+  "description": "This project was bootstrapped with Fastify-CLI.",
+  "main": "app.js",
+  "directories": {
+    "test": "test"
+  },
+  "scripts": {
+    "start": "fastify start -l info dist/app.js",
+    "dev": "fastify start -w -l info -P dist/app.js",
+    "build": "tsc -p tsconfig.json",
+    "lint": "eslint \"**/*.{ts,tsx,js}\"",
+    "lint:fix": "eslint \"**/*.{ts,tsx,js}\" --fix",
+    "format": "prettier --check \"**/*.{ts,tsx,js,json,css,md}\"",
+    "format:fix": "prettier --write \"**/*.{ts,tsx,js,json,css,md}\"",
+    "lint-and-format": "pnpm lint && pnpm run format",
+    "test": "tap"
+  },
+  "keywords": [],
+  "author": "",
+  "license": "ISC",
+  "dependencies": {
+    "@fastify/autoload": "^6.0.0",
+    "@fastify/sensible": "^6.0.0",
+    "fast-json-stable-stringify": "^2.1.0",
+    "fastify": "^5.0.0",
+    "fastify-cli": "^7.3.0",
+    "fastify-plugin": "^5.0.0",
+    "tap": "^21.1.0",
+    "zod": "^3.24.2"
+  },
+  "devDependencies": {
+    "@eslint/compat": "^1.2.7",
+    "@eslint/js": "^9.23.0",
+    "@types/node": "^22.13.14",
+    "@typescript-eslint/eslint-plugin": "^8.28.0",
+    "@typescript-eslint/parser": "^8.28.0",
+    "eslint": "^9.23.0",
+    "eslint-config-prettier": "^10.1.1",
+    "eslint-plugin-n": "^17.17.0",
+    "eslint-plugin-prettier": "^5.2.5",
+    "eslint-plugin-promise": "^7.2.1",
+    "eslint-plugin-unicorn": "^58.0.0",
+    "fastify-tsconfig": "^3.0.0",
+    "globals": "^16.0.0",
+    "prettier": "^3.5.3",
+    "ts-node": "^10.9.2",
+    "ts-node-dev": "^2.0.0",
+    "typescript": "^5.8.2",
+    "typescript-eslint": "^8.28.0"
+  }
+}
